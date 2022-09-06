@@ -716,10 +716,10 @@ class GDELayer(nn.Module):
 class Decoder(nn.Module):
     def __init__(self):
         super(Decoder, self).__init__()
-        self.upsample=nn.ConvTranspose2d(384, 1, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
+        self.upsample=nn.ConvTranspose2d(384, 1, kernel_size=3, stride=2, padding=1, output_padding=3,dilation=1)
         #self.upsample1=nn.ConvTranspose2d(576, 1, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
         #self.up2= nn.ConvTranspose2d(1, 1, kernel_size=4, stride=2, padding=1) 
-        self.up2= nn.ConvTranspose2d(1, 1, kernel_size=3, stride=2, padding=1)
+        self.up2= nn.ConvTranspose2d(1, 1, kernel_size=3, stride=2, padding=2)
         self.up21= nn.ConvTranspose2d(1, 1, kernel_size=4, stride=2, padding=1) 
         self.act=nn.Sigmoid()
         
@@ -741,7 +741,7 @@ class Decoder(nn.Module):
         edge_rgbd0=self.act(self.up21(lde_out1))
         edge_rgbd1=self.act(self.up21(lde_out2))
         edge_rgbd2=self.act(self.up21(lde_out3))
-        print(self.up2(sal_high).shape,self.up2(sal_med).shape,self.up2(sal_low).shape,  edge_rgbd0.shape)
+        print(self.up2(sal_high).shape,self.up2(sal_med).shape,self.up2(sal_low).shape,  edge_rgbd0.shape,  edge_rgbd1.shape,  edge_rgbd2.shape)
         sal_final=edge_rgbd0+edge_rgbd1+edge_rgbd2+self.up2(self.up2(sal_low+self.up2((sal_med+(self.up2(sal_high))))))
         
 
