@@ -741,7 +741,7 @@ class Decoder(nn.Module):
         edge_rgbd0=self.act(self.up21(lde_out1))
         edge_rgbd1=self.act(self.up21(lde_out2))
         edge_rgbd2=self.act(self.up21(lde_out3))
-        print(self.up2(sal_high).shape,self.up2(sal_med).shape,self.up2(sal_low).shape,  edge_rgbd0.shape,  edge_rgbd1.shape,  edge_rgbd2.shape)
+        #print(self.up2(sal_high).shape,self.up2(sal_med).shape,self.up2(sal_low).shape,  edge_rgbd0.shape,  edge_rgbd1.shape,  edge_rgbd2.shape)
         sal_final=edge_rgbd0+edge_rgbd1+edge_rgbd2+self.up2(self.up2(sal_low+self.up2((sal_med+(self.up2(sal_high))))))
         
 
