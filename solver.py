@@ -25,7 +25,7 @@ class Solver(object):
         self.show_every = config.show_every
         #self.build_model()
         self.net = build_model(self.config.network, self.config.arch)
-        #self.net.eval()
+        self.net.eval()
         if config.mode == 'test':
             print('Loading pre-trained model for testing from %s...' % self.config.model)
             self.net.load_state_dict(torch.load(self.config.model, map_location=torch.device('cpu')))
