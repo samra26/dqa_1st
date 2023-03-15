@@ -69,9 +69,9 @@ class Solver(object):
         #print(name)
         #print(model)
         size_all_mb = (param_size + buffer_size) / 1024**2
-        print('model size: {:.3f}MB'.format(size_all_mb))
-        print("The number of trainable parameters: {}".format(num_params_t))
-        print("The number of parameters: {}".format(num_params))
+        print('model size: {:.6f}MB'.format(size_all_mb))
+        print("The number of trainable parameters: {:.6f}".format(num_params_t))
+        print("The number of parameters: {:.6f}".format(num_params))
 
     # build the network
     '''def build_model(self):
