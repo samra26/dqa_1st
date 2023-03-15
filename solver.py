@@ -63,6 +63,7 @@ class Solver(object):
                 num_params_t += p.numel()
             else:
                 num_params += p.numel()
+        buffer_size = 0
         for buffer in model.buffers():
             buffer_size += buffer.nelement() * buffer.element_size()
         print(name)
@@ -89,7 +90,7 @@ class Solver(object):
     def test(self):
         print('Testing...')
         starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
-        repetitions = 300
+        repetitions = 3
         timings=np.zeros((repetitions,1))
         time_s = time.time()
         img_num = len(self.test_loader)
