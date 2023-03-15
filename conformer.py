@@ -725,27 +725,28 @@ class Decoder(nn.Module):
         
         
         
-    def forward(self, lde_out ,rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l):
+    def forward(self, rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l):
         sal_high=rgb_h+depth_h
         sal_med=rgb_m+depth_m
         sal_low=rgb_l+depth_l
        
-        lde_out1=self.upsample(lde_out[0])
+        #lde_out1=self.upsample(lde_out[0])
       
 
-        lde_out2=self.upsample(lde_out[1])
+        #lde_out2=self.upsample(lde_out[1])
         
 
-        lde_out3=self.upsample(lde_out[2])
+        #lde_out3=self.upsample(lde_out[2])
         
-        edge_rgbd0=self.act(self.up21(lde_out1))
-        edge_rgbd1=self.act(self.up21(lde_out2))
-        edge_rgbd2=self.act(self.up21(lde_out3))
+        #edge_rgbd0=self.act(self.up21(lde_out1))
+        #edge_rgbd1=self.act(self.up21(lde_out2))
+        #edge_rgbd2=self.act(self.up21(lde_out3))
         #print(self.up2(sal_high).shape,self.up2(sal_med).shape,self.up2(sal_low).shape,  edge_rgbd0.shape,  edge_rgbd1.shape,  edge_rgbd2.shape)
         sal_final=edge_rgbd0+edge_rgbd1+edge_rgbd2+self.up2(self.up2(sal_low+self.up2((sal_med+(self.up2(sal_high))))))
+        sal_final=self.up2(self.up2(sal_low+self.up2((sal_med+(self.up2(sal_high))))))
         
 
-        return sal_final,sal_low,sal_med,sal_high,edge_rgbd0,edge_rgbd1,edge_rgbd2
+        return sal_final,sal_low,sal_med,sal_high
 
 
 class JL_DCF(nn.Module):
@@ -761,13 +762,14 @@ class JL_DCF(nn.Module):
         
     def forward(self, f_all,f1_all):
         x,y,q,k,v,Att = self.JLModule(f_all,f1_all)
-        lde_out = self.lde(x,y)
+        #lde_out = self.lde(x,y)
         coarse_sal_rgb,coarse_sal_depth=self.coarse_layer(x[12],y[12])
         rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l=self.gde_layers(x,y,coarse_sal_rgb,coarse_sal_depth)
 
-        sal_final,sal_low,sal_med,sal_high,e_rgbd0,e_rgbd1,e_rgbd2=self.decoder(lde_out ,rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l)
-
-        return sal_final,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att,e_rgbd0,e_rgbd1,e_rgbd2
+        #sal_final,sal_low,sal_med,sal_high,e_rgbd0,e_rgbd1,e_rgbd2=self.decoder(lde_out ,rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l)
+        sal_final,sal_low,sal_med,sal_high=self.decoder(rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l)
+        return sal_final,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att
+        #return sal_final,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att,e_rgbd0,e_rgbd1,e_rgbd2
 
 def build_model(network='conformer', base_model_cfg='conformer'):
    
