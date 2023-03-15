@@ -55,13 +55,20 @@ class Solver(object):
     def print_network(self, model, name):
         num_params_t = 0
         num_params=0
+        param_size = 0
+
         for p in model.parameters():
+            param_size += p.nelement() * p.element_size()
             if p.requires_grad:
                 num_params_t += p.numel()
             else:
                 num_params += p.numel()
+        for buffer in model.buffers():
+            buffer_size += buffer.nelement() * buffer.element_size()
         print(name)
         print(model)
+        size_all_mb = (param_size + buffer_size) / 1024**2
+        print('model size: {:.3f}MB'.format(size_all_mb))
         print("The number of trainable parameters: {}".format(num_params_t))
         print("The number of parameters: {}".format(num_params))
 
