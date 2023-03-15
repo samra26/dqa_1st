@@ -112,10 +112,10 @@ class Solver(object):
                     multi_fuse = 255 * pred
                     filename = os.path.join(self.config.test_folder, name[:-4] + '_convtran.png')
                     cv2.imwrite(filename, multi_fuse)
-                    macs, params = get_model_complexity_info(self.net, (3, 320,320), as_strings=True,
+                    #macs, params = get_model_complexity_info(self.net, (3, 320,320), as_strings=True,
                                            print_per_layer_stat=True, verbose=True)
-                    print('{:<30}  {:<8}'.format('Computational complexity: ', macs))
-                    print('{:<30}  {:<8}'.format('Number of parameters: ', params))
+                    #print('{:<30}  {:<8}'.format('Computational complexity: ', macs))
+                    #print('{:<30}  {:<8}'.format('Number of parameters: ', params))
    
                 '''#e_rgbd01 = F.interpolate(e_rgbd01, tuple(im_size), mode='bilinear', align_corners=True)
                 e_rgbd01 = np.squeeze(torch.sigmoid(Att[10])).cpu().data.numpy()
