@@ -148,7 +148,8 @@ class Solver(object):
                 #edge_loss_rgbd1=F.smooth_l1_loss(sal_edge_rgbd1,sal_edge)
                 #edge_loss_rgbd2=F.smooth_l1_loss(sal_edge_rgbd2,sal_edge)
                 
-                sal_loss_fuse = sal_final_loss+512*edge_loss_rgbd0+1024*edge_loss_rgbd1+2048*edge_loss_rgbd2+sal_loss_coarse_rgb+sal_loss_coarse_depth
+                sal_loss_fuse = sal_final_loss+sal_loss_coarse_rgb+sal_loss_coarse_depth
+                #sal_loss_fuse = sal_final_loss+512*edge_loss_rgbd0+1024*edge_loss_rgbd1+2048*edge_loss_rgbd2+sal_loss_coarse_rgb+sal_loss_coarse_depth
                 sal_loss = sal_loss_fuse/ (self.iter_size * self.config.batch_size)
                 r_sal_loss += sal_loss.data
                 r_sal_loss_item+=sal_loss.item() * sal_image.size(0)
