@@ -89,70 +89,31 @@ class Solver(object):
 
     def test(self):
         print('Testing...')
-        starter, ender = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
-        repetitions = 3
-        timings=np.zeros((repetitions,1))
+
         time_s = time.time()
         img_num = len(self.test_loader)
         for i, data_batch in enumerate(self.test_loader):
             images, name, im_size, depth = data_batch['image'], data_batch['name'][0], np.asarray(data_batch['size']), \
                                            data_batch['depth']
             with torch.no_grad():
-                for rep in range(repetitions):
-                    starter.record()
-                    if self.config.cuda:
-                        device = torch.device(self.config.device_id)
-                        images = images.to(device)
-                        depth = depth.to(device)
 
-                    #input = torch.cat((images, depth), dim=0)
-                    preds,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att,e_rgbd0,e_rgbd1,e_rgbd2 = self.net(images,depth)
-                    ender.record()
-                    # WAIT FOR GPU SYNC
-                    torch.cuda.synchronize()
-                    curr_time = starter.elapsed_time(ender)
-                    timings[rep] = curr_time
-                    #print(e_rgbd01.shape)
-                    preds = F.interpolate(preds, tuple(im_size), mode='bilinear', align_corners=True)
-                    pred = np.squeeze(torch.sigmoid(preds)).cpu().data.numpy()
-                    #print(pred.shape)
-                    pred = (pred - pred.min()) / (pred.max() - pred.min() + 1e-8)
-                    multi_fuse = 255 * pred
-                    filename = os.path.join(self.config.test_folder, name[:-4] + '_convtran.png')
-                    cv2.imwrite(filename, multi_fuse)
-                    #macs, params = get_model_complexity_info(self.net, (3, 320,320), as_strings=True,                                           print_per_layer_stat=True, verbose=True)
-                    #print('{:<30}  {:<8}'.format('Computational complexity: ', macs))
-                    #print('{:<30}  {:<8}'.format('Number of parameters: ', params))
-   
-                '''#e_rgbd01 = F.interpolate(e_rgbd01, tuple(im_size), mode='bilinear', align_corners=True)
-                e_rgbd01 = np.squeeze(torch.sigmoid(Att[10])).cpu().data.numpy()
-                print(e_rgbd01.shape)
-                #e_rgbd01 = (e_rgbd01-e_rgbd01.min()) / (e_rgbd01.max() - e_rgbd01.min() + 1e-8)
-                #e_rgbd01 = 255 * e_rgbd01
-                filename = os.path.join(self.config.test_folder, name[:-4] + '_edge.png')
-                a=cv2.imwrite(filename, e_rgbd01)
-                print(a)
-                #e_rgbd11 = F.interpolate(e_rgbd11, tuple(im_size), mode='bilinear', align_corners=True)
-                e_rgbd11 = np.squeeze(torch.sigmoid(Att[11])).cpu().data.numpy()
-                print(e_rgbd11.shape)
-                e_rgbd11 = (e_rgbd11-e_rgbd11.min()) / (e_rgbd11.max() - e_rgbd11.min() + 1e-8)
-                e_rgbd11 = 255 * e_rgbd11
-                filename = os.path.join(self.config.test_folder, name[:-5] + '_edge.png')
-                cv2.imwrite(filename, e_rgbd11)
+                if self.config.cuda:
+                    device = torch.device(self.config.device_id)
+                    images = images.to(device)
+                    depth = depth.to(device)
 
-                #e_rgbd21 = F.interpolate(e_rgbd21, tuple(im_size), mode='bilinear', align_corners=True)
-                e_rgbd21 = np.squeeze(torch.sigmoid(Att[9])).cpu().data.numpy()
-
-                e_rgbd21 = (e_rgbd21-e_rgbd21.min()) / (e_rgbd21.max() - e_rgbd21.min() + 1e-8)
-                e_rgbd21 = 255 * e_rgbd21
-                filename = os.path.join(self.config.test_folder, name[:-6] + '_edge.png')
-                cv2.imwrite(filename, e_rgbd21)'''
+                # start time
+                torch.cuda.synchronize()
+                tsince = int(round(time.time()*1000)) 
+                preds,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att,e_rgbd0,e_rgbd1,e_rgbd2 = self.net(images,depth)
+                torch.cuda.synchronize()
+                ttime_elapsed = int(round(time.time()*1000)) - tsince
+                print ('test time elapsed {}ms'.format(ttime_elapsed))
+      
         time_e = time.time()
         print('Speed: %f FPS' % (img_num / (time_e - time_s)))
         print('Test Done!')
-        mean_syn = np.sum(timings) / repetitions
-        std_syn = np.std(timings)
-        print(mean_syn)
+
     
   
     # training phase
