@@ -528,14 +528,14 @@ class LDELayer(nn.Module):
         self.operation_stage_3=nn.Sequential(nn.Conv2d(384,64,kernel_size=3,stride=1,padding=2,dilation=2), nn.ReLU())
         self.operation_stage_4=nn.AvgPool2d(4,4)        		
         self.operation_stage_5=nn.MaxPool2d(4,4)
-        self.ca_1=ShuffleChannelAttention(channel=576,reduction=16,kernel_size=3,groups=4)
-        self.ca_2=ShuffleChannelAttention(channel=576,reduction=16,kernel_size=3,groups=8)
-        self.ca_3=ShuffleChannelAttention(channel=576,reduction=16,kernel_size=3,groups=16)
-        self.ca_4=ShuffleChannelAttention(channel=576,reduction=16,kernel_size=3,groups=32)
-        self.ca_5=ShuffleChannelAttention(channel=576,reduction=16,kernel_size=3,groups=64)
-        self.upsample=nn.ConvTranspose2d(576, 64, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
+        self.ca_1=ShuffleChannelAttention(channel=384,reduction=16,kernel_size=3,groups=4)
+        self.ca_2=ShuffleChannelAttention(channel=384,reduction=16,kernel_size=3,groups=8)
+        self.ca_3=ShuffleChannelAttention(channel=384,reduction=16,kernel_size=3,groups=16)
+        self.ca_4=ShuffleChannelAttention(channel=384,reduction=16,kernel_size=3,groups=32)
+        self.ca_5=ShuffleChannelAttention(channel=384,reduction=16,kernel_size=3,groups=64)
+        self.upsample=nn.ConvTranspose2d(384, 64, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
         self.upsample_1=nn.ConvTranspose2d(384, 96, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
-        self.conv1x1=nn.Conv2d(576,384,1,1)
+        self.conv1x1=nn.Conv2d(384,384,1,1)
         self.last_conv1x1=nn.Conv2d(384,1,1,1)
         
 
@@ -605,8 +605,8 @@ class CoarseLayer(nn.Module):
     def __init__(self):
         super(CoarseLayer, self).__init__()
         self.relu = nn.ReLU()
-        self.conv_r = nn.Sequential(nn.Conv2d(1536,768,1,1),self.relu,nn.Conv2d(768, 1, 1, 1))
-        self.conv_d=  nn.Sequential(nn.Conv2d(576,192,1,1),self.relu,nn.Conv2d(192,1,3,2,1))
+        self.conv_r = nn.Sequential(nn.Conv2d(1024,512,1,1),self.relu,nn.Conv2d(512, 1, 1, 1))
+        self.conv_d=  nn.Sequential(nn.Conv2d(384,192,1,1),self.relu,nn.Conv2d(192,1,3,2,1))
         
 
     def forward(self, x, y):
@@ -626,16 +626,16 @@ class GDELayer(nn.Module):
         k=1
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
-        self.conv1024=nn.Sequential(nn.Conv2d(1536,768,1,1),self.relu,nn.Conv2d(768,1,1,1))
-        self.conv512=nn.Sequential(nn.Conv2d(768,384,1,1),self.relu,nn.Conv2d(384,1,1,1))
-        self.conv256=nn.Sequential(nn.Conv2d(384,128,1,1),self.relu,nn.Conv2d(128,1,1,1))
+        self.conv1024=nn.Sequential(nn.Conv2d(1024,512,1,1),self.relu,nn.Conv2d(512,1,1,1))
+        self.conv512=nn.Sequential(nn.Conv2d(512,256,1,1),self.relu,nn.Conv2d(256,1,1,1))
+        self.conv256=nn.Sequential(nn.Conv2d(256,128,1,1),self.relu,nn.Conv2d(128,1,1,1))
         
-        self.conv384=nn.Sequential(nn.Conv2d(576,192,1,1),self.relu,nn.Conv2d(192,1,1,1))
+        self.conv384=nn.Sequential(nn.Conv2d(384,192,1,1),self.relu,nn.Conv2d(192,1,1,1))
         self.upsampling= nn.ConvTranspose2d(k,k, kernel_size=4, stride=2 , padding=1) # 10x10 to 20x20
         self.upsampling11= nn.ConvTranspose2d(k,k, kernel_size=4, stride=4 , padding=0)# 10x10 to 40x40
         self.upsampling12=nn.ConvTranspose2d(1,1, kernel_size=5, stride=8 , padding=0,output_padding=3) # 10x10 t0 80x80
-        self.upsampling22= nn.ConvTranspose2d(576,k, kernel_size=4, stride=2 , padding=1) 
-        self.upsampling222= nn.ConvTranspose2d(576,1, kernel_size=4, stride=4 , padding=0)
+        self.upsampling22= nn.ConvTranspose2d(384,k, kernel_size=4, stride=2 , padding=1) 
+        self.upsampling222= nn.ConvTranspose2d(384,1, kernel_size=4, stride=4 , padding=0)
         
 
     def forward(self, x, y,coarse_sal_rgb,coarse_sal_depth):
@@ -655,7 +655,7 @@ class GDELayer(nn.Module):
 
             #x_r = self.act(self.bn(self.conv_project(x_r)))
             #print(j,rgb_part.shape)
-            if (rgb_part.size(1)==1536):
+            if (rgb_part.size(1)==1024):
                 rgb_part=self.conv1024(rgb_part)
                 coarse_sal_rgb1=self.upsampling(coarse_sal_rgb)
                 coarse_sal_depth1=self.upsampling(coarse_sal_depth)
@@ -773,8 +773,8 @@ class JL_DCF(nn.Module):
 
 def build_model(network='conformer', base_model_cfg='conformer'):
    
-        backbone= Conformer(patch_size=16, channel_ratio=6, embed_dim=576, depth=12,
-                      num_heads=9, mlp_ratio=4, qkv_bias=True)
+        backbone= Conformer(patch_size=16, channel_ratio=4, embed_dim=384, depth=12,
+                      num_heads=6, mlp_ratio=4, qkv_bias=True)
         
    
 
