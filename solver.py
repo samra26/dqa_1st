@@ -27,6 +27,8 @@ class Solver(object):
         #self.build_model()
         self.net = build_model(self.config.network, self.config.arch)
         self.net.eval()
+        n_parameters = sum(p.numel() for p in self.net.parameters() if p.requires_grad)
+        print('number of params:', n_parameters)
         if config.mode == 'test':
             print('Loading pre-trained model for testing from %s...' % self.config.model)
             self.net.load_state_dict(torch.load(self.config.model, map_location=torch.device('cpu')))
