@@ -485,8 +485,8 @@ class JLModule(nn.Module):
     def forward(self, x,y):
 
         conv,tran,q,k,v,x_att = self.backbone(x,y)
-        for i in range(len(conv)):
-            print(i,"     ",conv[i].shape,tran[i].shape)
+        '''for i in range(len(conv)):
+            print(i,"     ",conv[i].shape,tran[i].shape)'''
         
 
         return conv,tran,q,k,v,x_att # list of tensor that compress model output
@@ -542,13 +542,13 @@ class LDELayer(nn.Module):
     def forward(self, list_x,list_y):
         lde_out=[]
         
-        for i in range(len(list_x)):
+        '''for i in range(len(list_x)):
         
             rgb_conv = list_x[i]
          
             depth_tran = list_y[i]
             print("******LDE layer******")
-            print(i,"     ",rgb_conv.shape,depth_tran.shape)
+            print(i,"     ",rgb_conv.shape,depth_tran.shape)'''
 
         init_stage = 2
         depth=12
@@ -557,30 +557,30 @@ class LDELayer(nn.Module):
             B,_,C=list_y[j].shape
             #print('j=',j)
             rgb_1=self.operation_stage_1(list_x[j])
-            print(rgb_1.shape)
+            #print(rgb_1.shape)
     
             rgb_2=self.operation_stage_2(list_x[j])
-            print(rgb_2.shape)
+            #print(rgb_2.shape)
             rgb_3=self.operation_stage_3(list_x[j])
-            print(rgb_3.shape)
+            #print(rgb_3.shape)
             rgb_4=self.operation_stage_4(list_x[j])
-            print(rgb_4.shape)
+            #print(rgb_4.shape)
             rgb_5=self.operation_stage_5(list_x[j])
-            print(rgb_5.shape)
+            #print(rgb_5.shape)
             x=list_y[j]
             x_r = x[:, 1:].transpose(1, 2).reshape(B, C, 20,20)
             #print("*******tran*****")
             #print(x_r.shape)
             depth_1=self.upsample(self.ca_1(x_r))
-            print('depth_1',depth_1.shape)
+            #print('depth_1',depth_1.shape)
             depth_2=self.upsample(self.ca_2(x_r))
-            print('depth_2',depth_2.shape)
+            #print('depth_2',depth_2.shape)
             depth_3=self.upsample(self.ca_3(x_r))
-            print('depth_3',depth_3.shape)
+            #print('depth_3',depth_3.shape)
             depth_4=self.conv1x1(self.ca_4(x_r))
-            print('depth_4',depth_4.shape)
+            #print('depth_4',depth_4.shape)
             depth_5=self.conv1x1(self.ca_5(x_r))
-            print('depth_5',depth_5.shape)
+            #print('depth_5',depth_5.shape)
             rgbd_fusion_1=rgb_1*depth_1
             rgbd_fusion_2=rgb_2*depth_2
             rgbd_fusion_3=rgb_3*depth_3
@@ -592,7 +592,7 @@ class LDELayer(nn.Module):
             #print('rgbd_fusion_4',rgbd_fusion_4.shape) 
             #print('rgbd_fusion_5',rgbd_fusion_5.shape)      
             c_cat=torch.cat((rgbd_fusion_1,rgbd_fusion_2,rgbd_fusion_3,rgbd_fusion_4,rgbd_fusion_5),dim=1)  
-            print('c_cat',c_cat.shape)  
+            #print('c_cat',c_cat.shape)  
             last_out=list_x[j]+self.last_conv1x1(c_cat)
             print('last',last_out.shape)
             lde_out.append(last_out)
