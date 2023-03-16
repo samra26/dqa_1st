@@ -542,13 +542,13 @@ class LDELayer(nn.Module):
     def forward(self, list_x,list_y):
         lde_out=[]
         
-        '''for i in range(len(list_x)):
+        for i in range(len(list_x)):
         
             rgb_conv = list_x[i]
          
             depth_tran = list_y[i]
             print("******LDE layer******")
-            print(i,"     ",rgb_conv.shape,depth_tran.shape)'''
+            print(i,"     ",rgb_conv.shape,depth_tran.shape)
 
         init_stage = 2
         depth=12
@@ -592,7 +592,7 @@ class LDELayer(nn.Module):
             #print('rgbd_fusion_4',rgbd_fusion_4.shape) 
             #print('rgbd_fusion_5',rgbd_fusion_5.shape)      
             c_cat=torch.cat((rgbd_fusion_1,rgbd_fusion_2,rgbd_fusion_3,rgbd_fusion_4,rgbd_fusion_5),dim=1)  
-            #print('c_cat',c_cat.shape)  
+            print('c_cat',c_cat.shape)  
             last_out=list_x[j]+self.last_conv1x1(c_cat)
             #print('last',last_out.shape)
             lde_out.append(last_out)
