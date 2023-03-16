@@ -12,9 +12,9 @@ import torch.nn as nn
 import argparse
 import os.path as osp
 import os
-from ptflops import get_model_complexity_info
+#from ptflops import get_model_complexity_info
 size_coarse = (10, 10)
-from pthflops import count_ops
+#from pthflops import count_ops
 
 
 
@@ -28,13 +28,13 @@ class Solver(object):
         #self.build_model()
         self.net = build_model(self.config.network, self.config.arch)
         self.net.eval()
-        device = 'cuda:0'
-        n_parameters = sum(p.numel() for p in self.net.parameters() if p.requires_grad)
-        print('number of params:', n_parameters)
-        models=self.net.to(device)
-        inp = torch.rand(1,3,320,320).to(device)
-        flop = count_ops(models, inp)
-        print('no of flops',flop)
+        #device = 'cuda:0'
+        #n_parameters = sum(p.numel() for p in self.net.parameters() if p.requires_grad)
+        #print('number of params:', n_parameters)
+        #models=self.net.to(device)
+        #inp = torch.rand(1,3,320,320).to(device)
+        #flop = count_ops(models, inp)
+        #print('no of flops',flop)
         if config.mode == 'test':
             print('Loading pre-trained model for testing from %s...' % self.config.model)
             self.net.load_state_dict(torch.load(self.config.model, map_location=torch.device('cpu')))
