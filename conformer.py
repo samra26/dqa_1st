@@ -762,7 +762,7 @@ class JL_DCF(nn.Module):
         
     def forward(self, f_all,f1_all):
         x,y,q,k,v,Att = self.JLModule(f_all,f1_all)
-        #lde_out = self.lde(x,y)
+        lde_out = self.lde(x,y)
         #coarse_sal_rgb,coarse_sal_depth=self.coarse_layer(x[12],y[12])
         #rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l=self.gde_layers(x,y,coarse_sal_rgb,coarse_sal_depth)
 
