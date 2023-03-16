@@ -30,7 +30,7 @@ class Solver(object):
         self.net.eval()
         n_parameters = sum(p.numel() for p in self.net.parameters() if p.requires_grad)
         print('number of params:', n_parameters)
-        flop = count_ops(self.net, torch.rand(1,3,320,320))
+        flop = count_ops(self.net.cuda(), torch.rand(1,3,320,320).cuda())
         print('no of flops',flop)
         if config.mode == 'test':
             print('Loading pre-trained model for testing from %s...' % self.config.model)
