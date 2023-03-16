@@ -14,7 +14,7 @@ def main(config):
             os.mkdir("%s/demo-%s" % (config.save_folder, time.strftime("%d")))
         config.save_folder = "%s/demo-%s" % (config.save_folder, time.strftime("%d"))
         train = Solver(train_loader, None,config)
-        #train.train()
+        train.train()
     elif config.mode == 'test':
         #get_test_info(config)
         test_loader = get_loader(config, mode='test')
