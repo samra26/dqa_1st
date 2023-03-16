@@ -750,14 +750,14 @@ class Decoder(nn.Module):
 
 
 class JL_DCF(nn.Module):
-    def __init__(self,JLModule,lde_layers,coarse_layer,gde_layers):
+    def __init__(self,JLModule,lde_layers,coarse_layer,gde_layers,decoder):
         super(JL_DCF, self).__init__()
         
         self.JLModule = JLModule
         self.lde = lde_layers
         self.coarse_layer=coarse_layer
         self.gde_layers=gde_layers
-        #self.decoder=decoder
+        self.decoder=decoder
         #self.final_conv=nn.Conv2d(8,1,1,1,0)
         
     def forward(self, f_all,f1_all):
@@ -766,7 +766,7 @@ class JL_DCF(nn.Module):
         coarse_sal_rgb,coarse_sal_depth=self.coarse_layer(x[12],y[12])
         rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l=self.gde_layers(x,y,coarse_sal_rgb,coarse_sal_depth)
 
-        #sal_final,sal_low,sal_med,sal_high,e_rgbd0,e_rgbd1,e_rgbd2=self.decoder(lde_out ,rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l)
+        sal_final,sal_low,sal_med,sal_high,e_rgbd0,e_rgbd1,e_rgbd2=self.decoder(lde_out ,rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l)
         #sal_final,sal_low,sal_med,sal_high=self.decoder(rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l)
         #return sal_final,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att
         #return sal_final,sal_low,sal_med,sal_high,coarse_sal_rgb,coarse_sal_depth,Att,e_rgbd0,e_rgbd1,e_rgbd2
@@ -778,5 +778,5 @@ def build_model(network='conformer', base_model_cfg='conformer'):
         
    
 
-        #return JL_DCF(JLModule(backbone),LDELayer(),CoarseLayer(),GDELayer(),Decoder())
-        return JL_DCF(JLModule(backbone),LDELayer(),CoarseLayer(),GDELayer())
+        return JL_DCF(JLModule(backbone),LDELayer(),CoarseLayer(),GDELayer(),Decoder())
+        #return JL_DCF(JLModule(backbone),LDELayer(),CoarseLayer(),GDELayer())
