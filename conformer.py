@@ -594,7 +594,7 @@ class LDELayer(nn.Module):
             c_cat=torch.cat((rgbd_fusion_1,rgbd_fusion_2,rgbd_fusion_3,rgbd_fusion_4,rgbd_fusion_5),dim=1)  
             #print('c_cat',c_cat.shape)  
             last_out=list_x[j]+self.last_conv1x1(c_cat)
-            print('last',last_out.shape)
+            #print('last',last_out.shape)
             lde_out.append(last_out)
 
 
