@@ -536,7 +536,7 @@ class LDELayer(nn.Module):
         self.upsample=nn.ConvTranspose2d(384, 64, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
         self.upsample_1=nn.ConvTranspose2d(256, 96, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
         self.conv1x1=nn.Conv2d(384,256,1,1)
-        self.last_conv1x1=nn.Conv2d(256,1,1,1)
+        self.last_conv1x1=nn.Conv2d(384,1,1,1)
         
 
     def forward(self, list_x,list_y):
