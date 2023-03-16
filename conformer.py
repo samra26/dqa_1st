@@ -750,11 +750,11 @@ class Decoder(nn.Module):
 
 
 class JL_DCF(nn.Module):
-    def __init__(self,JLModule,lde_layers):
+    def __init__(self,JLModule):
         super(JL_DCF, self).__init__()
         
         self.JLModule = JLModule
-        self.lde = lde_layers
+        #self.lde = lde_layers
         #self.coarse_layer=coarse_layer
         #self.gde_layers=gde_layers
         #self.decoder=decoder
@@ -762,7 +762,7 @@ class JL_DCF(nn.Module):
         
     def forward(self, f_all,f1_all):
         x,y,q,k,v,Att = self.JLModule(f_all,f1_all)
-        lde_out = self.lde(x,y)
+        #lde_out = self.lde(x,y)
         #coarse_sal_rgb,coarse_sal_depth=self.coarse_layer(x[12],y[12])
         #rgb_h,rgb_m,depth_h,depth_m,rgb_l,depth_l=self.gde_layers(x,y,coarse_sal_rgb,coarse_sal_depth)
 
@@ -779,4 +779,4 @@ def build_model(network='conformer', base_model_cfg='conformer'):
    
 
         #return JL_DCF(JLModule(backbone),LDELayer(),CoarseLayer(),GDELayer(),Decoder())
-        return JL_DCF(JLModule(backbone),LDELayer())
+        return JL_DCF(JLModule(backbone))
