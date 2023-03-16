@@ -594,7 +594,7 @@ class LDELayer(nn.Module):
             c_cat=torch.cat((rgbd_fusion_1,rgbd_fusion_2,rgbd_fusion_3,rgbd_fusion_4,rgbd_fusion_5),dim=1)  
             print('c_cat',c_cat.shape)  
             last_out=list_x[j]+self.last_conv1x1(c_cat)
-            #print('last',last_out.shape)
+            print('last',last_out.shape)
             lde_out.append(last_out)
 
 
@@ -716,7 +716,7 @@ class GDELayer(nn.Module):
 class Decoder(nn.Module):
     def __init__(self):
         super(Decoder, self).__init__()
-        self.upsample=nn.ConvTranspose2d(384, 1, kernel_size=3, stride=2, padding=1, output_padding=1,dilation=1)
+        self.upsample=nn.ConvTranspose2d(256, 1, kernel_size=3, stride=2, padding=1, output_padding=1,dilation=1)
         #self.upsample1=nn.ConvTranspose2d(576, 1, kernel_size=3, stride=4, padding=1, output_padding=3,dilation=1)
         self.up2= nn.ConvTranspose2d(1, 1, kernel_size=4, stride=2, padding=1) 
         #self.up2= nn.ConvTranspose2d(1, 1, kernel_size=3, stride=2, padding=2)
