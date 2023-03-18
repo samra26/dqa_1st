@@ -117,6 +117,13 @@ class Solver(object):
                 torch.cuda.synchronize()
                 ttime_elapsed = int(round(time.time()*1000)) - tsince
                 print ('test time elapsed {}ms'.format(ttime_elapsed))
+                preds = F.interpolate(preds, tuple(im_size), mode='bilinear', align_corners=True)
+                pred = np.squeeze(torch.sigmoid(preds)).cpu().data.numpy()
+
+                pred = (pred - pred.min()) / (pred.max() - pred.min() + 1e-8)
+                multi_fuse = 255 * pred
+                filename = os.path.join(self.config.test_folder, name[:-4] + '_rgbonly.png')
+                cv2.imwrite(filename, multi_fuse)
       
         time_e = time.time()
         print('Speed: %f FPS' % (img_num / (time_e - time_s)))
