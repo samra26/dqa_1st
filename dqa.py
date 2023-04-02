@@ -20,6 +20,7 @@ class DQA(nn.Module):
  
         
     def forward(self, rgb,depth):
+        print(rgb.shape,depth.sahpe)
         B = rgb.shape[0]
         rgb = self.patches(rgb)
         B,L,C = rgb.shape
