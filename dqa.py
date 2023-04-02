@@ -9,7 +9,7 @@ import numpy as np
 from einops.layers.torch import Rearrange
   
 class DQA(nn.Module):
-    def __init__(self,img_size=384, patch_size=4, in_chans=3,  embed_dim=80):
+    def __init__(self,img_size=320, patch_size=4, in_chans=3,  embed_dim=80):
         super(DQA, self).__init__()
         self.patches = nn.Sequential(
             nn.Conv2d(in_chans, embed_dim, 7, 4, 2),
