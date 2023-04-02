@@ -6,7 +6,7 @@ import os
 import cv2
 import numpy
 import numpy as np
-
+from einops.layers.torch import Rearrange
   
 class DQA(nn.Module):
     def __init__(self,img_size=384, patch_size=4, in_chans=3,  embed_dim=144):
